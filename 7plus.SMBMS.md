@@ -824,12 +824,88 @@ public List<Role> getRoleList() {
     try {
         connection = BaseDao.getConnection();
         roleList = roleDao.getRoleList(connection);
-    } catch (SQLException throwables) {
-        throwables.printStackTrace();
+    } catch (SQLException e) {
+        e.printStackTrace();
     } finally {
         BaseDao.closeResource(connection, null, null);
     }
     return roleList;
 }
 ```
+
+### 4.  用户显示的Servlet
+
+1. 获取用户前端的数据（查询）
+2. 判断请求是否需要执行，看参数的值判断
+3. 为了实现分页，需要计算出当前页面和总页面，页面的大小
+4. 用户列表展示
+5. 返回前端
+
+```java
+public void query(HttpServletRequest req, HttpServletResponse resp) {
+    //查询用户列表
+    //从前端获取数据
+    String queryUsername = req.getParameter("queryname");
+    String tempRole = req.getParameter("queryUserRole");
+    String pageIndex = req.getParameter("pageIndex");
+    int queryUserRole = 0;
+
+    //获取用户列表
+    UserServiceImpl userService = new UserServiceImpl();
+    List<User> userList = null;
+
+    //第一次走这个请求，一定是第一页，页面大小是固定的
+    int pageSize = 5; //可以把这些写到配置文件中，方便后期修改
+    int currentPageNo = 1;
+
+    if (queryUsername == null) {
+        queryUsername = "";
+    }
+    if (tempRole != null && !tempRole.equals("")) {
+        queryUserRole = Integer.parseInt(tempRole); //给查询赋值！0，1，2，3
+    }
+    if (pageIndex != null) {
+        currentPageNo = Integer.parseInt(pageIndex);
+    }
+
+    //获取用户的总数 (分页： 上一页，下一页的情况）
+    int totalCount = userService.getUserCount(queryUsername, queryUserRole);
+    //总页数支持
+    PageSupport pageSupport = new PageSupport();
+    pageSupport.setCurrentPageNo(currentPageNo);
+    pageSupport.setPageSize(pageSize);
+    pageSupport.setTotalCount(totalCount);
+
+    int totalPageCount = pageSupport.getTotalPageCount();
+    //控制首页和尾页
+    //如果页面要小于1，就显示第一页的东西
+    if (currentPageNo < 1) {
+        currentPageNo = 1;
+    } else if (currentPageNo > totalPageCount) { //当前页面大于
+        currentPageNo = totalPageCount;
+    }
+
+    //获取用户列表提示
+    userList = userService.getUserList(queryUsername, queryUserRole, currentPageNo, pageSize);
+    req.setAttribute("userList", userList);
+    RoleService roleService = new RoleServiceImpl();
+    List<Role> roleList = roleService.getRoleList();
+    req.setAttribute("roleList", roleList);
+    req.setAttribute("totalCount", totalCount);
+    req.setAttribute("currentPageNo", currentPageNo);
+    req.setAttribute("totalPageCount", totalPageCount);
+    req.setAttribute("queryUsrName", queryUsername);
+    req.setAttribute("queryUserRole", queryUserRole);
+
+    //返回前端
+    try {
+        req.getRequestDispatcher("userlist.jsp").forward(req, resp);
+    } catch (ServletException | IOException e) {
+        e.printStackTrace();
+    }
+
+}
+```
+
+小黄鸭调试法：自言自语（滑稽）
 
