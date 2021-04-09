@@ -909,3 +909,5 @@ public void query(HttpServletRequest req, HttpServletResponse resp) {
 
 小黄鸭调试法：自言自语（滑稽）
 
+![100](images/100.png)
+
