@@ -8,7 +8,7 @@ Currently, I only have notes for JavaScript, MySQL, JavaWeb. I have also learned
 
 Best wishes to everybody who is struggling to make a progress in your coding life.
 
-
+4/16/2021 Updates: Now program:SMBMS, MyBatis and Spring notes released.
 
 
 
@@ -19,3 +19,5 @@ Best wishes to everybody who is struggling to make a progress in your coding lif
 目前，我只有JavaScript，MySQL，JavaWeb的笔记。我还学习了网络基础，JUC并发，HTML，CSS。然而，我在学习这些课程的时候还没意识到记录笔记的重要性。之后我试图学习如何使用markdown来做笔记。我将持续更新此系列。希望我能做到吧。我不会在这里放出任何代码文件。
 
 向每一个努力在漫长的码农生涯中尝试取得进步的人们致以最真诚的问候！
+
+4/16/2021更新： 现在SMBMS项目，MyBatis，Spring框架笔记已经放出。
