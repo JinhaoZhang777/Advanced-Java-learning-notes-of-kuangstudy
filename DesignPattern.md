@@ -1453,3 +1453,215 @@ public class ProtoTypeShape {
 该正方形的面积=9
 ```
 
+### 6.4 工厂方法模式
+
+#### 1. 简单工厂模式（静态工厂方法模式）
+
+现实生活中，原始社会自给自足（没有工厂），农耕社会小作坊（简单工厂，民间酒坊），工业革命流水线（工厂方法，自产自销），现代产业链代工厂（抽象工厂，富士康）。我们的项目代码同样是由简到繁一步一步迭代而来的，但对于调用者来说，却越来越简单。
+
+在日常开发中，凡是需要生成复杂对象的地方，都可以尝试考虑使用工厂模式来代替。
+
+> 注意：上述复杂对象指的是类的构造函数参数过多等对类的构造有影响的情况，因为类的构造过于复杂，如果直接在其他业务类内使用，则两者的耦合过重，后续业务更改，就需要在任何引用该类的源代码内进行更改，光是查找所有依赖就很消耗时间了，更别说要一个一个修改了。
+
+工厂模式的定义：定义一个创建产品对象的工厂接口，将产品对象的实际创建工作推迟到具体子工厂类当中。这满足创建型模式中所要求的“创建与使用相分离”的特点。
+
+按实际业务场景划分，工厂模式有 3 种不同的实现方式，分别是简单工厂模式、工厂方法模式和抽象工厂模式。
+
+我们把被创建的对象称为“产品”，把创建产品的对象称为“工厂”。如果要创建的产品不多，只要一个工厂类就可以完成，这种模式叫“简单工厂模式”。
+
+在简单工厂模式中创建实例的方法通常为静态（static）方法，因此简单工厂模式（Simple Factory Pattern）又叫作静态工厂方法模式（Static Factory Method Pattern）。
+
+简单来说，简单工厂模式有一个具体的工厂类，可以生成多个不同的产品，属于创建型设计模式。**==简单工厂模式不在 GoF 23 种设计模式之列。==**
+
+简单工厂模式每增加一个产品就要增加一个具体产品类和一个对应的具体工厂类，这增加了系统的复杂度，违背了“开闭原则”。
+
+> “工厂方法模式”是对简单工厂模式的进一步抽象化，其好处是可以使系统在不修改原来代码的情况下引进新的产品，即满足开闭原则。
+
+##### 1. 优点和缺点
+
+优点：
+
+1. 工厂类包含必要的逻辑判断，可以决定在什么时候创建哪一个产品的实例。客户端可以免除直接创建产品对象的职责，很方便的创建出相应的产品。工厂和产品的职责区分明确。
+2. 客户端无需知道所创建具体产品的类名，只需知道参数即可。
+3. 也可以引入配置文件，在不修改客户端代码的情况下更换和添加新的具体产品类。
+
+缺点：
+
+1. 简单工厂模式的工厂类单一，负责所有产品的创建，职责过重，一旦异常，整个系统将受影响。且工厂类代码会非常臃肿，违背高聚合原则。
+2. 使用简单工厂模式会增加系统中类的个数（引入新的工厂类），增加系统的复杂度和理解难度
+3. 系统扩展困难，一旦增加新产品不得不修改工厂逻辑，在产品类型较多时，可能造成逻辑过于复杂
+4. 简单工厂模式使用了 static 工厂方法，造成工厂角色无法形成基于继承的等级结构。
+
+##### 2. 应用场景
+
+对于产品种类相对较少的情况，考虑使用简单工厂模式。使用简单工厂模式的客户端只需要传入工厂类的参数，不需要关心如何创建对象的逻辑，可以很方便地创建所需产品。
+
+##### 3. 模式的结构与实现
+
+简单工厂模式的主要角色如下：
+
+- 简单工厂（SimpleFactory）：是简单工厂模式的核心，负责实现创建所有实例的内部逻辑。工厂类的创建产品类的方法可以被外界直接调用，创建所需的产品对象。
+- 抽象产品（Product）：是简单工厂创建的所有对象的父类，负责描述所有实例共有的公共接口。
+- 具体产品（ConcreteProduct）：是简单工厂模式的创建目标。
+
+其结构图如下图所示。
+
+<img src="images/376.png" alt="简单工厂模式的结构图" style="zoom:75%;" />
+
+
+
+根据上图写出该模式的代码如下：
+
+```java
+public class Client {
+    public static void main(String[] args) {
+    }
+    //抽象产品
+    public interface Product {
+        void show();
+    }
+    //具体产品：ProductA
+    static class ConcreteProduct1 implements Product {
+        public void show() {
+            System.out.println("具体产品1显示...");
+        }
+    }
+    //具体产品：ProductB
+    static class ConcreteProduct2 implements Product {
+        public void show() {
+            System.out.println("具体产品2显示...");
+        }
+    }
+    final class Const {
+        static final int PRODUCT_A = 0;
+        static final int PRODUCT_B = 1;
+        static final int PRODUCT_C = 2;
+    }
+    static class SimpleFactory {
+        public static Product makeProduct(int kind) {
+            switch (kind) {
+                case Const.PRODUCT_A:
+                    return new ConcreteProduct1();
+                case Const.PRODUCT_B:
+                    return new ConcreteProduct2();
+            }
+            return null;
+        }
+    }
+}
+```
+
+#### 2. 工厂方法模式
+
+**“工厂方法模式”是对简单工厂模式的进一步抽象化**，其好处是可以使系统在不修改原来代码的情况下引进新的产品，即满足开闭原则。
+
+##### 1. 优点和缺点
+
+优点：
+
+- 用户只需要知道具体工厂的名称就可得到所要的产品，无须知道产品的具体创建过程。
+- 灵活性增强，对于新产品的创建，只需多写一个相应的工厂类。
+- 典型的解耦框架。高层模块只需要知道产品的抽象类，无须关心其他实现类，满足迪米特法则、依赖倒置原则和里氏替换原则。
+
+缺点：
+
+- 类的个数容易过多，增加复杂度
+- 增加了系统的抽象性和理解难度
+- 抽象产品只能生产一种产品，此弊端可使用抽象工厂模式解决。
+
+##### 2. 应用场景
+
+- 客户只知道创建产品的工厂名，而不知道具体的产品名。如 TCL 电视工厂、海信电视工厂等。
+- 创建对象的任务由多个具体子工厂中的某一个完成，而抽象工厂只提供创建产品的接口。
+- 客户不关心创建产品的细节，只关心产品的品牌
+
+##### 3. 模式的结构与实现
+
+工厂方法模式由抽象工厂、具体工厂、抽象产品和具体产品等4个要素构成。本节来分析其基本结构和实现方法。
+
+工厂方法模式的主要角色如下。
+
+1. 抽象工厂（Abstract Factory）：提供了创建产品的接口，调用者通过它访问具体工厂的工厂方法 newProduct() 来创建产品。
+2. 具体工厂（ConcreteFactory）：主要是实现抽象工厂中的抽象方法，完成具体产品的创建。
+3. 抽象产品（Product）：定义了产品的规范，描述了产品的主要特性和功能。
+4. 具体产品（ConcreteProduct）：实现了抽象产品角色所定义的接口，由具体工厂来创建，它同具体工厂之间一一对应。
+
+其结构图如图 1 所示。
+
+<img src="images/377.png" alt="工厂方法模式的结构图" style="zoom:80%;" />
+
+根据图 1 写出该模式的代码如下：
+
+```java
+package FactoryMethod;
+public class AbstractFactoryTest {
+    public static void main(String[] args) {
+        try {
+            Product a;
+            AbstractFactory af;
+            af = (AbstractFactory) ReadXML1.getObject();
+            a = af.newProduct();
+            a.show();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+//抽象产品：提供了产品的接口
+interface Product {
+    public void show();
+}
+//具体产品1：实现抽象产品中的抽象方法
+class ConcreteProduct1 implements Product {
+    public void show() {
+        System.out.println("具体产品1显示...");
+    }
+}
+//具体产品2：实现抽象产品中的抽象方法
+class ConcreteProduct2 implements Product {
+    public void show() {
+        System.out.println("具体产品2显示...");
+    }
+}
+//抽象工厂：提供了厂品的生成方法
+interface AbstractFactory {
+    public Product newProduct();
+}
+//具体工厂1：实现了厂品的生成方法
+class ConcreteFactory1 implements AbstractFactory {
+    public Product newProduct() {
+        System.out.println("具体工厂1生成-->具体产品1...");
+        return new ConcreteProduct1();
+    }
+}
+//具体工厂2：实现了厂品的生成方法
+class ConcreteFactory2 implements AbstractFactory {
+    public Product newProduct() {
+        System.out.println("具体工厂2生成-->具体产品2...");
+        return new ConcreteProduct2();
+    }
+}
+```
+
+程序运行结果如下：
+
+```
+具体工厂1生成-->具体产品1...
+具体产品1显示...
+```
+
+##### 4. 模式的应用实例
+
+【例1】用工厂方法模式设计畜牧场。
+
+分析：有很多种类的畜牧场，如养马场用于养马，养牛场用于养牛，所以该实例用工厂方法模式比较适合。
+
+对养马场和养牛场等具体工厂类，只要定义一个生成动物的方法 newAnimal() 即可。由于要显示马类和牛类等具体产品类的图像，所以它们的构造函数中用到了 JPanel、JLabd 和 ImageIcon 等组件，并定义一个 show() 方法来显示它们。
+
+客户端程序通过对象生成器类 ReadXML2 读取 XML 配置文件中的数据来决定养马还是养牛。其结构图如图 2 所示。
+
+<img src="images/378.png" alt="畜牧场结构图" style="zoom:80%;" />
+
+
+注意：当需要生成的产品不多且不会增加，一个具体工厂类就可以完成任务时，可删除抽象工厂类。这时工厂方法模式将退化到简单工厂模式。
+
