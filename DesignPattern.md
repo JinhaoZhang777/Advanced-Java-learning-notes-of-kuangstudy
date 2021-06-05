@@ -4944,3 +4944,8 @@ public class JepDemo {
 存款利息：760.0
 ```
 
+
+
+## 9. 一句话归纳设计模式
+
+<img src="images/448.jpg" alt="448" style="zoom:80%;" />
