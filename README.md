@@ -12,6 +12,8 @@ Best wishes to everybody who is struggling to make a progress in your coding lif
 
 5/10/2021 Updates: Now SpringMVC, AdvancedFrontEnd and Vue notes released.
 
+6/10/2021 Updates: Now DesignPattern, SpringBoot,  and SpringCloud notes released.
+
 
 
 这是在新冠大流行期间所记录的高级 Java 学习的一系列笔记，在这期间很多人像我一样，可能正因为职位僧多粥少的状况而妄自菲薄。由于在我的短暂而悲催的留学时光中，我两年内掌握的能力不足以让我在美国找到一份体面工作的工作经验和必要的技能，使我清楚意识到，建立一个学习框架并开始学习技术栈变得越来越重要。我个人希望这个笔记系列不仅能为我现在的经历添砖加瓦，而且对我之后的事业也能有所帮助。或许决定开始做笔记这件事值得纪念吧（笑，我将这个系列上传至此，同时也希望我随时翻阅复习。
@@ -25,3 +27,5 @@ Best wishes to everybody who is struggling to make a progress in your coding lif
 4/16/2021更新： 现在SMBMS项目，MyBatis，Spring框架笔记已经放出。
 
 5/10/2021更新： 现在SpringMVC, 大前端进阶，Vue笔记已经放出。
+
+6/10/2021更新：现在DesignPattern, SpringBoot, SpringCloud笔记已经放出。
